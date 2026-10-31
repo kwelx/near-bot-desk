@@ -1,0 +1,269 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1915;
+  --muted: #5e584e;
+  --paper: #f3efe6;
+  --card: #fffdf8;
+  --line: #d8d0c3;
+  --green: #1f6b4a;
+  --green-ink: #e7f2ec;
+  --danger: #8c2f2f;
+  --warn: #f3ead2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Georgia, "Iowan Old Style", Palatino, serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  margin: 0.15rem 0 0.4rem;
+  font-size: 2.4rem;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.4rem;
+}
+
+h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+}
+
+p {
+  margin: 0.4rem 0;
+}
+
+.wrap {
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+header.wrap {
+  padding: 2rem 0 0.5rem;
+}
+
+main.wrap {
+  padding-bottom: 2rem;
+}
+
+footer.wrap {
+  padding: 0 0 2.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--green);
+}
+
+.lede {
+  max-width: 40rem;
+  font-size: 1.08rem;
+}
+
+.mode {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--green-ink);
+  border: 1px solid #b7d7c8;
+  border-radius: 6px;
+}
+
+.mode.warn {
+  background: var(--warn);
+  border-color: #e0d0a8;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+section {
+  min-width: 0;
+}
+
+.skill {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 0 0 0.65rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.skill.selected {
+  border-color: var(--green);
+  box-shadow: inset 3px 0 0 var(--green);
+}
+
+.skill-text {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.skill-title {
+  font-weight: 600;
+}
+
+.skill-summary,
+.note,
+.empty {
+  color: var(--muted);
+}
+
+.skill-price {
+  font-variant-numeric: tabular-nums;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+textarea,
+input {
+  width: 100%;
+  padding: 0.65rem 0.7rem;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  margin-top: 0.8rem;
+  padding: 0.7rem 1rem;
+  color: #fff;
+  background: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 6px;
+  font: inherit;
+  cursor: pointer;
+}
+
+button.secondary {
+  color: var(--ink);
+  background: transparent;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.actions button {
+  margin-top: 0.4rem;
+}
+
+.error {
+  min-height: 1.4rem;
+  color: var(--danger);
+}
+
+.order {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+}
+
+.outcome-label {
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+pre {
+  margin: 0;
+  padding: 0.85rem 0.95rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  background: #f7f4ee;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
+  font-size: 0.92rem;
+}
+
+.lookup {
+  max-width: 22rem;
+  margin-top: 0.8rem;
+}
+
+#session,
+#lookup {
+  margin-top: 1.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}

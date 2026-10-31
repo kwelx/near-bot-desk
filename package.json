@@ -1,0 +1,15 @@
+{
+  "name": "near-bot-desk",
+  "private": true,
+  "type": "module",
+  "description": "Testnet desk where an agent pays 1 NEAR for one bot skill.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node agent/run.mjs",
+    "start": "node web/server.mjs"
+  }
+}
