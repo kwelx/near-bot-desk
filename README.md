@@ -1,8 +1,10 @@
 # Bot Desk
 
-An agent pays 1 testnet NEAR for one bot skill. The contract stores a receipt and a deterministic outcome in that same call. The page lets you run the same rules locally with no account.
+Built at NEAR HACKATHON (Nov 2026).
 
-This is a NEAR Hackathon entry for the development window that ends **2026-11-14 23:59 UTC**. It has not been submitted. Nothing here is deployed.
+An agent pays 1 testnet NEAR for one bot skill. The contract stores a receipt and a deterministic outcome in that same call. The local page runs the same rules with no account and no key. That mock is the path judges run.
+
+Development ends **2026-11-14 23:59 UTC**. This entry has not been submitted. Nothing here is deployed. The draft X post is in [DEMO_POST.md](DEMO_POST.md). The demo post link is still `TODO_DEMO_VIDEO_URL`.
 
 ## Problem
 
@@ -14,11 +16,11 @@ A $1 bot skill needs one payment step a person can run: choose the skill, pay, a
 
 The **$1 figure is the list price**. The charge in this project is **1 testnet NEAR**. No dollars move.
 
-## Track
+## Tracks
 
-Primary track: **`agents`** (Agent Economy). The demo is an agent listing a skill, paying for it, and reading the receipt. That is the track's subject: an agent paying for work.
+Primary: **Agent Economy** (`agents`). The demo is an agent listing a skill, paying for it, and reading the receipt.
 
-**`business`** also fits. The catalog, the price, and the deadline are fixed in the contract. Only the owner can withdraw. The agent only buys.
+Secondary: **Autonomous Business** (`business`). The catalog, the price, and the deadline are fixed in the contract. Only the owner can withdraw. The agent only buys.
 
 Other tracks do not fit. There is no exchange, token, NFT, or game. NEAR Intents has no testnet (hackathon Q-007), so this project does not use Intents. An own contract is enough (Q-011). Testnet-only projects are eligible (Q-010).
 
@@ -38,17 +40,16 @@ This repository is that integration. It does not contain the botsdothework.com s
 
 ## Try the mock
 
-No account and no network. You need Node.js 22 or newer. There is no `npm install`.
+This is the judge path. No account, no key, and no network. You need Node.js 22 or newer. There is no `npm install`. From a fresh clone:
 
 ```sh
 node --test
 node agent/run.mjs
-node web/server.mjs
 ```
 
-`node --test` runs the mock, the read-only RPC client, and the static server checks.
+`node --test` exits 0. It checks the mock, the read-only testnet RPC client, and the static server.
 
-`node agent/run.mjs` prints:
+`node agent/run.mjs` exits 0 and prints:
 
 ```text
 Bot Desk agent (mock, no network)
@@ -65,7 +66,13 @@ Desk balance: 1 NEAR
 Spent by demo-agent.testnet: 1 NEAR
 ```
 
-Then open `http://127.0.0.1:4173`.
+Start the page in a second command. It keeps running:
+
+```sh
+node web/server.mjs
+```
+
+See `Bot Desk mock is at http://127.0.0.1:4173`, then open that URL. If port 4173 is taken, stop the other process or run `PORT=4174 node web/server.mjs` and open the URL it prints.
 
 1. Leave the brief as `Draft a one-page status note for the bot desk demo.`
 2. Click **Pay 1 NEAR**.
@@ -136,26 +143,28 @@ contract/target/wasm32-unknown-unknown/release/bot_desk.wasm
 
 ## Optional testnet deploy
 
-This repository did not create an account, call a faucet, or deploy. Do these steps yourself if you want the same call on testnet. Use your own testnet account. Do not deploy to mainnet. Do not paste a key or seed phrase into the repo, the page, or a committed shell history. `sign-with-keychain` uses the key NEAR CLI already stored on your machine.
+Skip this section on a fresh clone. Judges do not need it. The commands below are examples for a later deploy, not the reproduction check. This repository did not create an account, call a faucet, or deploy. Use your own testnet account if you deploy. Do not deploy to mainnet. Do not paste a key or seed phrase into the repo, the page, or a committed shell history. `sign-with-keychain` uses the key NEAR CLI already stored on your machine.
+
+The optional testnet contract account placeholder is `TODO_TESTNET_CONTRACT_ACCOUNT`. Replace it only after you deploy.
 
 Public RPC used by the page and by NEAR CLI's testnet network: `https://rpc.testnet.near.org`.
 
 Install NEAR CLI from the official docs if you want it: <https://docs.near.org/tools/near-cli>. The commands below match that CLI's `contract` syntax. Replace the placeholders with the testnet account you create.
 
-```sh
+```text
 export CONTRACT_ID=TODO_TESTNET_CONTRACT_ACCOUNT
 export SIGNER_ID=TODO_TESTNET_CONTRACT_ACCOUNT
 ```
 
 Create and fund a testnet account with the faucet only if you do not already have one. The official CLI form is:
 
-```sh
+```text
 near account create-account sponsor-by-faucet-service $CONTRACT_ID autogenerate-new-keypair save-to-keychain network-config testnet create
 ```
 
 Deploy, then initialize. `new` is signed by the contract account, and that account is the owner:
 
-```sh
+```text
 near contract deploy $CONTRACT_ID use-file contract/target/wasm32-unknown-unknown/release/bot_desk.wasm without-init-call network-config testnet sign-with-keychain send
 
 near contract call-function as-transaction $CONTRACT_ID new json-args '{"owner":"'"$CONTRACT_ID"'"}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as $CONTRACT_ID network-config testnet sign-with-keychain send
@@ -163,13 +172,13 @@ near contract call-function as-transaction $CONTRACT_ID new json-args '{"owner":
 
 Buy the quote skill. The signer pays 1 testnet NEAR from their own balance. Gas is separate from the 1 NEAR deposit.
 
-```sh
+```text
 near contract call-function as-transaction $CONTRACT_ID buy_skill json-args '{"skill_id":"quote-brief","brief":"Draft a one-page status note for the bot desk demo."}' prepaid-gas '100.0 Tgas' attached-deposit '1 NEAR' sign-as $SIGNER_ID network-config testnet sign-with-keychain send
 ```
 
 Read the order back:
 
-```sh
+```text
 near contract call-function as-read-only $CONTRACT_ID get_order json-args '{"order_id":1}' network-config testnet now
 ```
 
@@ -177,7 +186,7 @@ The outcome text is the same quote block as in the mock.
 
 Withdraw sends only the recorded skill payments to the owner. It does not sweep the whole account. Leave enough testnet NEAR on the contract account to cover storage. If the liquid balance is below the recorded treasury, the withdraw transaction fails and the orders stay.
 
-```sh
+```text
 near contract call-function as-transaction $CONTRACT_ID withdraw json-args '{}' prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' sign-as $CONTRACT_ID network-config testnet sign-with-keychain send
 ```
 
@@ -191,33 +200,27 @@ http://127.0.0.1:4173/?contract=TODO_TESTNET_CONTRACT_ACCOUNT
 
 The page reads `list_skills`, `price_yocto`, `deadline`, `owner`, `treasury`, and `order_count` through the testnet RPC. Enter an order id and click **Read order** to call `get_order`. The pay button stays disabled. The page never asks for a key. If the account is missing or the contract is not initialized, the page shows the RPC error and points back at the mock (`http://127.0.0.1:4173` with no query).
 
-## Placeholders
-
-The owner fills these in. Do not invent them.
+## Accounts and the demo post link
 
 | Item | Value |
 | --- | --- |
-| Owner NEAR account (mainnet prize payout) | `TODO_OWNER_NEAR_ACCOUNT` |
-| Demo video link (public X post) | `TODO_DEMO_VIDEO_URL` |
-| Testnet contract account, after you deploy | `TODO_TESTNET_CONTRACT_ACCOUNT` |
+| Mainnet prize payout account | `kwelx.near` |
+| demo post link | `TODO_DEMO_VIDEO_URL` |
+| Optional testnet contract account | `TODO_TESTNET_CONTRACT_ACCOUNT` |
 
-Also still required from the owner before any submission: project name, lead name, contact email, team size, and agreement to the contact notice in `https://nearhackathon.com/HACKATHON.md`. Suggested tracks are `agents` and `business`. This repository does not send the submission.
+`kwelx.near` is the mainnet account for a prize payout. This repository does not send a transaction to it. The demo post link stays `TODO_DEMO_VIDEO_URL` until the owner publishes the X post and pastes the URL. The testnet contract account is optional and unused by the mock.
 
-## Demo video script
+Also still required from the owner before any submission: project name, lead name, contact email, team size, and agreement to the contact notice in `https://nearhackathon.com/HACKATHON.md`. Tracks to select: `agents` and `business`. The description to paste is in [DEMO_POST.md](DEMO_POST.md). This repository does not send the submission.
 
-Not posted. The owner records and publishes it.
+## Demo
 
-1. Open the local page and say what the desk is: an agent paying for one bot skill.
-2. Leave the prefilled brief. Click **Pay 1 NEAR**.
-3. Point at order 1 and the quote, then at **Desk balance: 1 NEAR**.
-4. Say that NEAR's part is the payment and the receipt in one `buy_skill` call, and that this run is the local mock of that call. Testnet uses the same method with 1 testnet NEAR.
-5. Tag `@NEARProtocol` and `#NEARHackathon` on the post. Link this repository.
+Record the local mock, not a testnet deploy. One moment is enough: leave the prefilled brief, click **Pay 1 NEAR**, and show order 1 with **Desk balance: 1 NEAR**. The draft post text is in [DEMO_POST.md](DEMO_POST.md). It has not been posted.
 
-## Draft description
+## Form description
 
-Not submitted. The owner can edit it. It is the "what we built" text, not a submission payload.
+Not submitted. The same two sentences are in [DEMO_POST.md](DEMO_POST.md).
 
-Bot Desk is a testnet contract where an agent pays a fixed price for one bot skill. The problem is a $1 bot workflow with no NEAR payment a person can run. `buy_skill` checks a deposit of exactly 1 testnet NEAR and stores a receipt plus a deterministic outcome in that call. The skills are a one-page quote, a deadline check against 2026-11-14, and a receipt. The $1 amount is the list price only. The demo moves no dollars and no mainnet funds. A local page runs the same rules with no account. After the owner deploys the contract to their own testnet account, the same buy can be signed with NEAR CLI. The owner account and the demo video are filled in by the team before submission.
+Bot Desk is a testnet contract where an agent pays exactly 1 NEAR for one bot skill and that call stores the receipt and the outcome. The $1 amount is the list price; the demo charge is 1 testnet NEAR, and the local page runs the same rules with no account.
 
 ## Libraries
 
