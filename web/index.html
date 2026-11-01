@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bot Desk</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="wrap">
+      <p class="eyebrow">NEAR testnet</p>
+      <h1>Bot Desk</h1>
+      <p class="lede">
+        An agent pays 1 testnet NEAR for one bot skill and receives a receipt with the skill outcome.
+      </p>
+      <p id="mode" class="mode" role="status"></p>
+    </header>
+    <main class="wrap">
+      <div class="layout">
+        <section>
+          <h2>Skills</h2>
+          <div id="skills"></div>
+        </section>
+        <section>
+          <h2>Pay for a skill</h2>
+          <form id="buy-form">
+            <label for="brief">Brief</label>
+            <textarea id="brief" name="brief" rows="5" maxlength="400"></textarea>
+            <p id="form-error" class="error" role="alert"></p>
+            <button id="pay" type="submit">Pay 1 NEAR</button>
+          </form>
+          <div id="result" aria-live="polite"></div>
+        </section>
+      </div>
+      <section id="session">
+        <h2>This session</h2>
+        <p id="treasury"></p>
+        <div id="orders"></div>
+        <div class="actions">
+          <button id="withdraw" class="secondary" type="button">Withdraw treasury (mock owner)</button>
+          <button id="reset" class="secondary" type="button">Reset session</button>
+        </div>
+      </section>
+      <section id="lookup" hidden>
+        <h2>On-chain read</h2>
+        <dl id="chain-facts"></dl>
+        <form id="lookup-form" class="lookup">
+          <label for="order-id">Order id</label>
+          <input id="order-id" name="order-id" inputmode="numeric" />
+          <button type="submit">Read order</button>
+        </form>
+        <p class="note">
+          Paying on testnet is a NEAR CLI transaction signed on your machine. This page has no key field.
+        </p>
+      </section>
+    </main>
+    <footer class="wrap">
+      <p>
+        The list price is $1. The charge in this demo is 1 testnet NEAR, not a dollar transfer.
+        No mainnet transaction is sent from this page. Setup steps are in the repository README.
+      </p>
+    </footer>
+    <noscript>
+      <p class="wrap">This demo needs JavaScript to run the mock desk in the browser.</p>
+    </noscript>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

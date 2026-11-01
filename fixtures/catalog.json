@@ -1,0 +1,17 @@
+[
+  {
+    "id": "quote-brief",
+    "title": "Quote a one-page brief",
+    "summary": "Turns a short job note into a paid quote. The list price is $1. The testnet charge is 1 NEAR."
+  },
+  {
+    "id": "deadline-check",
+    "title": "Check a deadline",
+    "summary": "Reads the first YYYY-MM-DD in the brief and compares it with 2026-11-14."
+  },
+  {
+    "id": "receipt-writer",
+    "title": "Write a receipt",
+    "summary": "Formats the brief as a receipt for the 1 NEAR testnet charge."
+  }
+]
